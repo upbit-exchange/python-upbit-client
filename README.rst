@@ -2,11 +2,11 @@
     :align: center
 
 - `Base Repository <https://github.com/uJhin/upbit-client/>`_
-- `Python Upbit Client Repository <https://github.com/uJhin/python-upbit-client>`_
+- `Python Upbit Client Repository <https://github.com/uJhin/python-upbit-client/>`_
 
 Upbit OPEN API Client
 ######################
-- @Author: `uJhin <https://github.com/uJhin>`_
+- @Author: `uJhin <https://github.com/uJhin/>`_
 - @GitHub: https://github.com/uJhin/upbit-client/
 - @Official Documents: https://ujhin.github.io/upbit-client-docs/
 
@@ -43,7 +43,8 @@ REST Client
     secret_key = "Your Secret Key"
 
     client = Upbit(access_key, secret_key)
-    print(client.APIKey.APIKey_info()['result'])
+    api_keys = client.APIKey.APIKey_info()
+    print(api_keys['result'])
 
 
 - Buy Currency
@@ -96,6 +97,8 @@ WebSocket Client
 
 .. code:: python
 
+    # Using WebSocket
+
     import json
     import asyncio
 
@@ -105,10 +108,12 @@ WebSocket Client
     # Definition async function
     async def ticker(sock, payload):
         async with sock as conn:
-            await conn.send(payload)
-            data = await conn.recv()
-            result = json.loads(data.decode('utf8'))
-            print(result)
+            while True:
+                await conn.send(payload)
+                recv = await conn.recv()
+                data = recv.decode('utf8')
+                result = json.loads(data)
+                print(result)
 
 
     sock = UpbitWebSocket()
